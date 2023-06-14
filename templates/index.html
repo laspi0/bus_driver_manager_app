@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block base %}
+<!-- Sale & Revenue Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div class="col-12">
+        <div class="bg-secondary rounded h-100 p-4">
+          <a  type="button" class="btn btn-outline-success float-end">Ajouter un contact</a>
+          <h6 class="mb-4">Responsive Table</h6>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Prenom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Numero</th>
+                <th scope="col">Email</th>
+                <th scope="col">Date de creation</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% if contacts%}
+              {% for contact in contacts %}
+              <tr>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.last_name }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.created_at }}</td>
+                <td>
+                    <a href="{{ url_for('show_update_form', id=contact.id) }}" class="btn btn-outline-warning m-2">
+                        Modifier
+                    </a>
+                    
+                  <a type="button" href="{{ url_for('delete', id=contact.id) }}" class="btn btn-outline-danger m-2">
+                    Supprimer
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+                <p>pas de contact dans la base</p>
+              {% endif %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Widgets End -->
+{% endblock %}
