@@ -147,12 +147,11 @@
           <a href="#" class="sidebar-toggler flex-shrink-0">
             <i class="fa fa-bars"></i>
           </a>
-          <form class="d-none d-md-flex ms-4">
+          <form action="{{ url_for('index') }}" class="d-none d-md-flex ms-4">
             <input
               class="form-control bg-dark border-0"
-              type="search"
-              placeholder="Search"
-            />
+               type="text" name="search" placeholder="Rechercher un contact">
+               <button type="submit"  class="btn btn-outline-success m-2">Rechercher</button>      
           </form>
           <div class="navbar-nav align-items-center ms-auto">
             
@@ -169,7 +168,7 @@
                   alt=""
                   style="width: 40px; height: 40px"
                 />
-                <span class="d-none d-lg-inline-flex">John Doe</span>
+                <span class="d-none d-lg-inline-flex">{{session['username']}}</span>
               </a>
               <div
                 class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0"

@@ -1,8 +1,10 @@
+from operator import or_
 from flask import Flask, redirect, render_template, request, session
 from flask_login import current_user
 from decorators import login_required
 from model import Contact, db, User
 from functools import wraps
+from sqlalchemy import or_
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:laspi@localhost:5432/contact"
@@ -13,6 +15,8 @@ db.init_app(app)
 
 
 @app.route('/login', methods=['GET', 'POST'])
+def route_login():
+    return login()
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -23,11 +27,13 @@ def login():
         if user and user.password == password:
             session['user_id'] = user.id
             session['username'] = user.username
+            # Ajoutez d'autres informations de l'utilisateur à la session selon vos besoins
             return redirect('/')
         else:
             return redirect('/login')
     else:
         return render_template('login.html')
+
 
 
 @app.route('/update/<int:id>', methods=['POST'])
@@ -66,10 +72,21 @@ def delete(id):
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def index():
-    # user_id = current_user.id
-    contacts = Contact.query.filter_by(user_id=session['user_id']).order_by(Contact.created_at).all()
-    return render_template('index.html', contacts=contacts)
+    search_query = request.args.get('search')
 
+    # Récupérer les contacts filtrés en fonction de la recherche
+    if search_query:
+        contacts = Contact.query.filter(
+            Contact.user_id == session['user_id'],
+            or_(
+                Contact.name.ilike(f"%{search_query}%"),
+                Contact.last_name.ilike(f"%{search_query}%")
+            )
+        ).order_by(Contact.created_at).all()
+    else:
+        contacts = Contact.query.filter_by(user_id=session['user_id']).order_by(Contact.created_at).all()
+
+    return render_template('index.html', contacts=contacts)
 
 @app.route('/add_contact', methods=['GET'])
 @login_required
@@ -135,6 +152,8 @@ def register_form():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('username', None)
+    session.pop('email', None)
     return redirect('/login')
 
 
