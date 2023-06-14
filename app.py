@@ -1,16 +1,26 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, session
 from model import Contact, db, User
+from functools import wraps
 
-from flask import request
-
-from flask import request
-from datetime import date
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:laspi@localhost:5432/contact"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = 'laspi'
 
 db.init_app(app)
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 @app.route('/update/<int:id>', methods=['POST'])
+@login_required
 def update(id):
     contact = Contact.query.get_or_404(id)
     name = request.form.get('name')
@@ -24,31 +34,38 @@ def update(id):
     db.session.commit()
     return redirect('/')
 
+
 @app.route('/update/<int:id>', methods=['GET'])
+@login_required
 def show_update_form(id):
     contact = Contact.query.get_or_404(id)
     return render_template('update.html', contact=contact)
 
 
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete(id):
     contact = Contact.query.get_or_404(id)
     db.session.delete(contact)
     db.session.commit()
     return redirect('/')
 
+
 @app.route("/", methods=['GET', 'POST'])
+@login_required
 def index():
     contacts = Contact.query.order_by(Contact.created_at).all()
     return render_template('index.html', contacts=contacts)
 
 
 @app.route('/add_contact', methods=['GET'])
+@login_required
 def add_contact_form():
     return render_template('add_contact.html')
 
-# Route pour enregistrer un contact
+
 @app.route('/add_contact', methods=['POST'])
+@login_required
 def add_contact():
     name = request.form.get('name')
     last_name = request.form.get('last_name')
@@ -68,6 +85,34 @@ def add_contact():
     return redirect('/')
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.password == password:
+            session['user_id'] = user.id
+            return redirect('/')
+        else:
+            return redirect('/login')
+    else:
+        return render_template('login.html')
+
+
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect('/login')
 
 
 if __name__ == "__main__":
