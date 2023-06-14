@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import date
 
 db = SQLAlchemy()
 
@@ -13,12 +14,6 @@ class User(db.Model):
         self.email = email
         self.password = password
 
-
-from datetime import datetime
-
-from datetime import datetime
-
-from datetime import date
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)

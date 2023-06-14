@@ -4,7 +4,7 @@
   <div class="row g-4">
     <div class="col-12">
         <div class="bg-secondary rounded h-100 p-4">
-          <a  type="button" class="btn btn-outline-success float-end">Ajouter un contact</a>
+          <a  type="button" href="{{ url_for('add_contact') }}"  class="btn btn-outline-success float-end">Ajouter un contact</a>
           <h6 class="mb-4">Responsive Table</h6>
         <div class="table-responsive">
           <table class="table">
@@ -20,7 +20,7 @@
               </tr>
             </thead>
             <tbody>
-                {% if contacts%}
+                {% if contacts %}
               {% for contact in contacts %}
               <tr>
                 <td>{{ contact.id }}</td>

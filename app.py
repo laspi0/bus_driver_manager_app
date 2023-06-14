@@ -1,4 +1,6 @@
 from flask import Flask, redirect, render_template, request, session
+from flask_login import current_user
+from decorators import login_required
 from model import Contact, db, User
 from functools import wraps
 
@@ -10,13 +12,22 @@ app.secret_key = 'laspi'
 db.init_app(app)
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.password == password:
+            session['user_id'] = user.id
+            session['username'] = user.username
+            return redirect('/')
+        else:
             return redirect('/login')
-        return f(*args, **kwargs)
-    return decorated_function
+    else:
+        return render_template('login.html')
 
 
 @app.route('/update/<int:id>', methods=['POST'])
@@ -51,10 +62,12 @@ def delete(id):
     return redirect('/')
 
 
+
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def index():
-    contacts = Contact.query.order_by(Contact.created_at).all()
+    # user_id = current_user.id
+    contacts = Contact.query.filter_by(user_id=session['user_id']).order_by(Contact.created_at).all()
     return render_template('index.html', contacts=contacts)
 
 
@@ -73,7 +86,7 @@ def add_contact():
     email = request.form.get('email')
 
     # Assurez-vous d'avoir l'ID de l'utilisateur approprié pour assigner le contact
-    user_id = 1  # Remplacez cette valeur par la logique appropriée pour récupérer l'ID de l'utilisateur
+    user_id = 2  # Remplacez cette valeur par la logique appropriée pour récupérer l'ID de l'utilisateur
 
     # Création d'une instance du modèle Contact
     contact = Contact(name=name, last_name=last_name, phone=phone, email=email, user_id=user_id)
@@ -83,23 +96,6 @@ def add_contact():
     db.session.commit()
 
     return redirect('/')
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        user = User.query.filter_by(username=username).first()
-
-        if user and user.password == password:
-            session['user_id'] = user.id
-            return redirect('/')
-        else:
-            return redirect('/login')
-    else:
-        return render_template('login.html')
 
 
 @app.after_request
@@ -114,7 +110,6 @@ def register_user():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        email = request.form.get('email')
 
         # Vérifiez si l'utilisateur existe déjà dans la base de données
         existing_user = User.query.filter_by(username=username).first()
@@ -122,7 +117,7 @@ def register_user():
             return render_template('register.html', error='Username already exists')
 
         # Créez un nouvel utilisateur
-        new_user = User(username=username, password=password, email=email)
+        new_user = User(username=username, password=password)
 
         # Ajoutez le nouvel utilisateur à la base de données
         db.session.add(new_user)
@@ -132,6 +127,9 @@ def register_user():
     else:
         return render_template('register.html')
 
+@app.route('/register', methods=['GET'])
+def register_form():
+    return render_template('register.html')
 
 
 @app.route('/logout')
