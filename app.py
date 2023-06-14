@@ -109,6 +109,31 @@ def add_header(response):
     response.headers['Expires'] = '0'
     return response
 
+@app.route('/register', methods=['GET', 'POST'])
+def register_user():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+
+        # Vérifiez si l'utilisateur existe déjà dans la base de données
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return render_template('register.html', error='Username already exists')
+
+        # Créez un nouvel utilisateur
+        new_user = User(username=username, password=password, email=email)
+
+        # Ajoutez le nouvel utilisateur à la base de données
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect('/login')
+    else:
+        return render_template('register.html')
+
+
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
