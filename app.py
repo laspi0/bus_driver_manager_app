@@ -4,7 +4,6 @@ from flask_login import current_user
 from decorators import login_required
 from model import Contact, db, User
 from functools import wraps
-from sqlalchemy import or_
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:laspi@localhost:5432/contact"
@@ -21,20 +20,16 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-
         user = User.query.filter_by(username=username).first()
-
         if user and user.password == password:
             session['user_id'] = user.id
             session['username'] = user.username
-            # Ajoutez d'autres informations de l'utilisateur à la session selon vos besoins
+            session['email'] = user.email
             return redirect('/')
         else:
             return redirect('/login')
     else:
         return render_template('login.html')
-
-
 
 @app.route('/update/<int:id>', methods=['POST'])
 @login_required
