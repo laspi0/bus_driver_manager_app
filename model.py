@@ -31,7 +31,3 @@ class Contact(db.Model):
         self.phone = phone
         self.email = email
         self.user_id = user_id
-
-
-
-

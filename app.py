@@ -98,7 +98,7 @@ def add_contact():
     email = request.form.get('email')
 
     # Assurez-vous d'avoir l'ID de l'utilisateur approprié pour assigner le contact
-    user_id = 2  # Remplacez cette valeur par la logique appropriée pour récupérer l'ID de l'utilisateur
+    user_id = session['user_id']  # Remplacez cette valeur par la logique appropriée pour récupérer l'ID de l'utilisateur
 
     # Création d'une instance du modèle Contact
     contact = Contact(name=name, last_name=last_name, phone=phone, email=email, user_id=user_id)
@@ -122,14 +122,13 @@ def register_user():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-
-        # Vérifiez si l'utilisateur existe déjà dans la base de données
+        email = request.form.get('email')  # Correction : extraire la valeur de l'e-mai
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             return render_template('register.html', error='Username already exists')
 
         # Créez un nouvel utilisateur
-        new_user = User(username=username, password=password)
+        new_user = User(username=username, email=email, password=password)  # Correction : ajouter l'e-mail
 
         # Ajoutez le nouvel utilisateur à la base de données
         db.session.add(new_user)
@@ -138,6 +137,7 @@ def register_user():
         return redirect('/login')
     else:
         return render_template('register.html')
+
 
 @app.route('/register', methods=['GET'])
 def register_form():
@@ -152,7 +152,8 @@ def logout():
     return redirect('/login')
 
 
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, port=5008)
+    app.run(debug=True, port=5000)
