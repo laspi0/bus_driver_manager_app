@@ -1,9 +1,137 @@
-{% extends 'base_form.html' %}
-{% block base_form %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GestionC</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
+
+    <!-- Favicon -->
+    <link href="static/img/favicon.ico" rel="icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0/css/bootstrap.min.css">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icon Font Stylesheet -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+    <link
+      href="static/lib/owlcarousel/assets/owl.carousel.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="static/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="static/css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
 
 
-<div class="container-fluid">
-  <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh">
+    <style>
+      /* Button */
+      .bg-secondary form .btn-primary {
+        background-color: #eb1616;
+      }
+    
+      /* Font Icon */
+      .bg-secondary a i {
+        background-color: transparent;
+        color: #eb1616;
+      }
+    
+      /* Heading */
+      .bg-secondary a h3 {
+        background-color: transparent;
+        color: #eb1616 !important;
+      }
+    
+      /* Body */
+      body {
+        background-color: #000000;
+      }
+    
+      /* Secondary */
+      .justify-content-center .bg-secondary {
+        background-color: #191c24 !important;
+      }
+    
+      .bg-secondary form .form-floating {
+        background-color: #000000;
+      }
+    
+      /* Floating first name */
+      #floatingFirstName {
+        background-color: #000000;
+      }
+      #floatingFirstName::placeholder {
+        color: #eb1616;
+      }
+    
+      /* Floating last name */
+      #floatingLastName {
+        background-color: #000000;
+      }
+    
+      /* Floating email */
+      #floatingEmail {
+        background-color: #000000;
+      }
+    
+      /* Floating phone */
+      #floatingPhone {
+        background-color: #000000;
+      }
+    
+      /* Label */
+      .bg-secondary form label {
+        color: #ffffff;
+      }
+    
+      /* Button */
+      .bg-secondary form .btn-primary {
+        border-style: none;
+      }
+    
+      /* Floating last name */
+      #floatingLastName {
+        transform: translateX(0px) translateY(0px);
+      }
+    
+      /* Heading */
+      .bg-secondary a h3 {
+        transform: translateX(0px) translateY(0px);
+      }
+    </style>
+    
+
+
+    <div class="container-fluid position-relative d-flex p-0">
+      
+      <div class="container-fluid">
+        <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh">
+          <!-- <a type="button" href="/" class="btn"><i class="fa fa-home"></i></a> -->
     <div class="col-5">
       <div class="bg-secondary rounded p-5 p-sm-5 my-4 mx-1">
         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -68,4 +196,22 @@
     </div>
   </div>
 </div>
-{% endblock %}
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="static/lib/chart/chart.min.js"></script>
+<script src="static/lib/easing/easing.min.js"></script>
+<script src="static/lib/waypoints/waypoints.min.js"></script>
+<script src="static/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="static/lib/tempusdominus/js/moment.min.js"></script>
+<script src="static/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="static/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="static/js/main.js"></script>
+</body>
+</html>
